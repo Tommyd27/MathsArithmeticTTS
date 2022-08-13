@@ -1,14 +1,11 @@
 #![allow(non_snake_case)]
 use rand::Rng;
 use tts_rust::{ GTTSClient, languages::Languages };
-use std::{/*io::stdout,*/ time::Duration, fmt::format};
+use std::time::Duration;
+use std::thread::sleep;
 
-use crossterm::{
-    event::{poll, read, Event, KeyCode},
-    execute,
-    //terminal::{disable_raw_mode, enable_raw_mode},
-    Result,
-};
+
+use winapi::{self, um::winuser::GetKeyState};
 fn main() {
     println!("Hell&o, world!");
 
@@ -18,17 +15,17 @@ fn main() {
     };
 	let mut randGen = rand::thread_rng();
    	let mut operator = ArithmeticOperators::Addition(1, 1);
-	while true
+	loop 
    	{
-	match randGen.gen_range(0u8..2)
-	{
+		match randGen.gen_range(0u8..2)
+		{
 
-		0 => operator = ArithmeticOperators::Addition(-50, 100),
-		1 => operator = ArithmeticOperators::Addition(-3, 50),
-		2 => operator = ArithmeticOperators::Addition(-3, 50),
-		_ => ()
-	}
-	AskQuestion(operator, &narrator)
+			0 => operator = ArithmeticOperators::Addition(-50, 100),
+			1 => operator = ArithmeticOperators::Multiplication(-3, 50),
+			2 => operator = ArithmeticOperators::Division(-3, 50),
+			_ => ()
+		}
+		AskQuestion(operator, &narrator)
    	}
 }
 #[derive(Copy, Clone)]
@@ -81,8 +78,9 @@ fn AskQuestion(operator : ArithmeticOperators, narrator : &GTTSClient)
 		
 		_ => println!("Not implemented error"),
 	}
-	waitForInput();
-	narrator.speak(&format!("{answer}"))
+	WaitForInput();
+	narrator.speak(&format!("{answer}"));
+	WaitForInput();
 
 
 
@@ -90,27 +88,16 @@ fn AskQuestion(operator : ArithmeticOperators, narrator : &GTTSClient)
 
 }
 
-fn waitForInput() -> Result<()> {
-    loop {
-        // Wait up to 1s for another event
-        if poll(Duration::from_millis(1_000))? {
-            // It's guaranteed that read() wont block if `poll` returns `Ok(true)`
-            let event = read()?;
-
-            println!("Event::{:?}\r", event);
-
-            if event == Event::Key(KeyCode::Up.into()) {
-                break;
-            }
-
-            /*if event == Event::Key(KeyCode::Esc.into()) {
-                break;
-            }*/
-        } else {
-            // Timeout expired, no event for 1s
-            println!("Waiting\r");
-        }
-    }
-
-    Ok(())
+fn WaitForInput()
+{
+	unsafe
+	{
+		let mut state = GetKeyState(0x26);
+		while state != -127 && state != -128
+		{
+			sleep(Duration::new(0, 12500000));
+			state = GetKeyState(0x26);
+		}
+	}
+	
 }
