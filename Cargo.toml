@@ -11,4 +11,5 @@ tts_rust = "0.3.3"
 
 #diesel = { version = "1.4.0", features = ["mysql"] }
 #dotenv = "0.10"
-crossterm = "0.25.0"
+#crossterm = "0.25.0"
+winapi = "0.3.9"
