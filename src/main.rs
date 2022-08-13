@@ -17,7 +17,7 @@ fn main() {
    	let mut operator = ArithmeticOperators::Addition(1, 1);
 	loop 
    	{
-		match randGen.gen_range(0u8..2)
+		match randGen.gen_range(0u8..3)
 		{
 
 			0 => operator = ArithmeticOperators::Addition(-50, 100),
@@ -47,7 +47,7 @@ fn AskQuestion(operator : ArithmeticOperators, narrator : &GTTSClient)
 			let numOne = randGen.gen_range(numsMin..numsMax);
 			let numTwo = randGen.gen_range(numsMin..numsMax);
 			
-			if randGen.gen_range(0u8..1) == 0
+			if randGen.gen_range(0u8..2) == 0
 			{
 				narrator.speak(&format!("{numOne} plus {numTwo}"));
 				answer = numOne + numTwo;
@@ -70,7 +70,7 @@ fn AskQuestion(operator : ArithmeticOperators, narrator : &GTTSClient)
 		ArithmeticOperators::Division(numsMin, numsMax) =>
 		{
 			let numOne = randGen.gen_range(numsMin..numsMax);
-			let numTwo = randGen.gen_range(numsMin..numsMax);
+			let numTwo = randGen.gen_range(-9..10);
 			answer = numOne * numTwo;
 			narrator.speak(&format!("{answer} divided by {numTwo}"));
 			answer = numOne;
