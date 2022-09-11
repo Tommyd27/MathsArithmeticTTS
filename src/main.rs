@@ -92,11 +92,13 @@ fn WaitForInput()
 {
 	unsafe
 	{
-		let mut state = GetKeyState( 	0x91);
-		while state != -127 && state != -128
+		let mut state = GetKeyState(0x91);
+		let mut repeats = 0;
+		while (state != -127 && state != -128) || (repeats < 240)
 		{
 			sleep(Duration::new(0, 12500000));
-			state = GetKeyState( 	0x91);
+			state = GetKeyState(0x91);
+			repeats += 1
 		}
 	}
 	
